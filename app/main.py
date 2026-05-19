@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.db.database import init_db
+from app.routers.leads import router as leads_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -13,6 +14,8 @@ app=FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+app.include_router(leads_router)
 
 @app.get("/health", tags=["Health"], summary="Health check")
 async def health():

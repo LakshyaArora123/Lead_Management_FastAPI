@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS leads (
     status TEXT NOT NULL DEFAULT 'new'
                 CHECK(status IN ('new', 'contacted', 'qualified', 'lost', 'converted')),
     notes TEXT,
-    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
-    updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%SZ', 'now')),
+    updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%SZ', 'now'))
 );
 """
 
