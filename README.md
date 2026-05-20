@@ -20,7 +20,7 @@ A simple, production-ready REST API for managing sales leads. Built with **Pytho
 
 **SQLite over PostgreSQL** — the problem statement asked for a lightweight database. SQLite requires zero setup, no running server, and the database creates itself on first run. For a lead management system at this scale it's the right tool. Swapping to PostgreSQL later only requires changing two files.
 
-**PATCH over PUT for status updates** — PUT replaces an entire resource, which would require sending all lead fields just to change one. PATCH updates only what you send. Since status updates are a specific action on a lead, PATCH is the correct choice.
+**PATCH over PUT for status updates** — PUT replaces an entire resource, which would require sending all lead fields just to change one. PATCH updates only what we send. Since status updates are a specific action on a lead, PATCH is the correct choice.
 
 **Single URL per resource** — `POST /api/leads` and `GET /api/leads` use the same URL. The HTTP method defines the action, the URL defines the resource. This is core REST design — no `/createLead` or `/getLeads` needed.
 
@@ -295,9 +295,9 @@ Custom HTTP errors use the same `detail` key:
 
 **Async programming** — regular Python is blocking, meaning one slow database call freezes everything. Using `async def` and `aiosqlite` means the server handles other requests while waiting on the database instead of sitting idle.
 
-**REST design** — a single URL like `/api/leads` handles both creating and listing leads depending on the HTTP method (`POST` vs `GET`). You don't need separate URLs like `/createLead` and `/getLeads`. The method is the action, the URL is the resource.
+**REST design** — a single URL like `/api/leads` handles both creating and listing leads depending on the HTTP method (`POST` vs `GET`). We don't need separate URLs like `/createLead` and `/getLeads`. The method is the action, the URL is the resource.
 
-**Pydantic** — instead of manually checking if fields are present and valid, you declare the shape of your data as a class and FastAPI rejects invalid requests automatically before your code even runs.
+**Pydantic** — instead of manually checking if fields are present and valid, I declared the shape of my data as a class and FastAPI rejects invalid requests automatically before the code even runs.
 
 **SQLite** — a full relational database that lives in a single file. No installation, no running server, no config. The database creates itself on first startup.
 
