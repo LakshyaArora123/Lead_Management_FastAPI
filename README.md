@@ -16,6 +16,22 @@ A simple, production-ready REST API for managing sales leads. Built with **Pytho
 
 ---
 
+## Design Decisions
+
+**SQLite over PostgreSQL** — the problem statement asked for a lightweight database. SQLite requires zero setup, no running server, and the database creates itself on first run. For a lead management system at this scale it's the right tool. Swapping to PostgreSQL later only requires changing two files.
+
+**PATCH over PUT for status updates** — PUT replaces an entire resource, which would require sending all lead fields just to change one. PATCH updates only what you send. Since status updates are a specific action on a lead, PATCH is the correct choice.
+
+**Single URL per resource** — `POST /api/leads` and `GET /api/leads` use the same URL. The HTTP method defines the action, the URL defines the resource. This is core REST design — no `/createLead` or `/getLeads` needed.
+
+**Validation at the schema layer** — all input validation lives in Pydantic schemas, not in route functions or SQL. This means invalid requests are rejected before any business logic or database call runs, and error messages are consistent and automatic.
+
+**UTC timestamps** — `created_at` and `updated_at` are stored in UTC, not local time. A server should never store local time since users and servers can be in different timezones. The frontend converts UTC to local time for display.
+
+**`updated_at` via a database trigger** — instead of updating this field in Python code, a SQLite trigger handles it automatically after every UPDATE. This means it's impossible to update a lead and forget to update the timestamp.
+
+---
+
 ## Project Structure
 
 ```
