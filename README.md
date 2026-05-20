@@ -239,7 +239,7 @@ new → contacted → qualified → converted
 | `new`       | Just created, not yet reached out to     |
 | `contacted` | Initial outreach made                    |
 | `qualified` | Confirmed interest / budget / fit        |
-| `converted` | Became a customer 🎉                     |
+| `converted` | Became a customer                        |
 | `lost`      | Not moving forward                       |
 
 ---
@@ -275,11 +275,22 @@ Custom HTTP errors use the same `detail` key:
 
 ---
 
-## Notes for Interns / Next Steps
+## What I Learned Building This
 
-- **Interactive docs**: The killer FastAPI feature — open http://localhost:8000/docs and you can test every endpoint in the browser without `curl`.
-- **Database**: SQLite is stored at `data/leads.db`. Inspect it with `sqlite3 data/leads.db ".tables"`.
-- **Adding fields**: Add the column in `app/db/database.py`, add the field to the Pydantic schema in `app/schemas/lead.py`, update the queries in `app/models/lead.py`.
-- **Swapping the database**: All SQL lives in `app/models/lead.py` and `app/db/database.py`. To switch to PostgreSQL, replace `aiosqlite` with `asyncpg` and update those two files.
-- **Tests**: Add [pytest](https://pytest.org/) + [httpx](https://www.python-httpx.org/) for async integration tests. FastAPI has first-class support via `TestClient`.
-- **Auth**: Add an API key dependency in `app/db/database.py` and inject it into routes with `Depends()`.
+**Async programming** — regular Python is blocking, meaning one slow database call freezes everything. Using `async def` and `aiosqlite` means the server handles other requests while waiting on the database instead of sitting idle.
+
+**REST design** — a single URL like `/api/leads` handles both creating and listing leads depending on the HTTP method (`POST` vs `GET`). You don't need separate URLs like `/createLead` and `/getLeads`. The method is the action, the URL is the resource.
+
+**Pydantic** — instead of manually checking if fields are present and valid, you declare the shape of your data as a class and FastAPI rejects invalid requests automatically before your code even runs.
+
+**SQLite** — a full relational database that lives in a single file. No installation, no running server, no config. The database creates itself on first startup.
+
+---
+
+## Future Scope
+
+- **Authentication** — API key middleware to restrict access
+- **Tests** — integration tests with `pytest` and `httpx`
+- **PostgreSQL** — swap `aiosqlite` for `asyncpg` in two files for production scale
+- **Search** — filter leads by company name or source
+- **Delete endpoint** — `DELETE /api/leads/{id}`
